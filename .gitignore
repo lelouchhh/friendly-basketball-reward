@@ -1,2 +1,4 @@
-.env
+internal/cron/.env
 .idea
+.env
+*.

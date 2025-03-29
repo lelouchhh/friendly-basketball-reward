@@ -18,3 +18,8 @@ func NewDB(url string) (*DB, error) {
 	}
 	return &DB{Conn: pool}, nil
 }
+
+func (db *DB) Close() {
+	db.Conn.Close()
+	log.Println("Database connection closed")
+}

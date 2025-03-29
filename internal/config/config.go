@@ -8,6 +8,7 @@ type Config struct {
 }
 
 func NewConfig() Config {
+
 	return Config{
 		PostgresConn: os.Getenv("POSTGRES_CONNECTION"),
 		CronSpec:     os.Getenv("CRON_SCHEDULE"),

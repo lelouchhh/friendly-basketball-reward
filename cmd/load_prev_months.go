@@ -1,46 +1,54 @@
-package cron
+package main
 
 import (
 	"context"
-	"log"
-	"time"
-
 	"github.com/lelouchhh/friendly-basketball-reward/internal/postgres"
-	"github.com/robfig/cron/v3"
+	"log"
+	"os"
 )
 
-// StartCronJobs запускает cron-задачи для расчета наград за предыдущий месяц.
-func StartCronJobs(db *postgres.DB, input string) {
-	c := cron.New()
-
-	// Используем cron-выражение для первого дня каждого месяца
-	_, err := c.AddFunc(input, func() {
-		log.Println("Running monthly cron job...")
-
-		// Определяем предыдущий месяц
-		now := time.Now()
-		prevMonth := now.AddDate(0, -1, 0)
-		year := prevMonth.Format("2006") // Год предыдущего месяца
-		month := prevMonth.Format("01")  // Месяц предыдущего месяца
-
-		// Создаем контекст
-		ctx := context.Background()
-
-		// Вычисляем и сохраняем награды
-		go processTopRatingPerMonth(ctx, db, year, month)
-		go processWorstRatingPerMonth(ctx, db, year, month)
-		go processTopWinratePerMonth(ctx, db, year, month)
-		go processBottomWinratePerMonth(ctx, db, year, month)
-		go processTopGainedRatingMonth(ctx, db, year, month)
-		go processTopLostRatingMonth(ctx, db, year, month)
-		go processMaxGamesPlayed(ctx, db, year, month)
-	})
+func main() {
+	// Подключение к базе данных
+	dsn := os.Getenv("POSTGRES_CONNECTION")
+	db, err := postgres.NewDB(dsn)
 	if err != nil {
-		log.Fatalf("Failed to schedule cron job: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
+	defer db.Close()
 
-	c.Start()
-	log.Println("Cron jobs started successfully")
+	// Получение текущей даты
+
+	// Вычисление предыдущих двух месяцев
+	// Форматирование дат для использования в запросах
+	year1 := "2025"
+	month1 := "01"
+	year2 := "2025"
+	month2 := "02"
+
+	// Создаем контекст
+	ctx := context.Background()
+
+	// Запуск обработки данных за предыдущие два месяца
+	processRewardsForMonth(ctx, db, year1, month1)
+	processRewardsForMonth(ctx, db, year2, month2)
+
+	log.Println("Processing completed successfully")
+}
+
+// processRewardsForMonth обрабатывает все награды за указанный месяц.
+func processRewardsForMonth(ctx context.Context, db *postgres.DB, year, month string) {
+	log.Printf("Processing rewards for %s-%s...", year, month)
+
+	// Обработка каждой награды
+	processTopRatingPerMonth(ctx, db, year, month)
+	processWorstRatingPerMonth(ctx, db, year, month)
+	processTopWinratePerMonth(ctx, db, year, month)
+	processBottomWinratePerMonth(ctx, db, year, month)
+	processTopGainedRatingMonth(ctx, db, year, month)
+	processTopLostRatingMonth(ctx, db, year, month)
+	processMaxGamesPlayed(ctx, db, year, month)
+
+	log.Printf("Finished processing rewards for %s-%s", year, month)
 }
 
 // processTopRatingPerMonth вычисляет лучшего игрока месяца и сохраняет награду.
