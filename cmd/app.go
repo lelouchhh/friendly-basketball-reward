@@ -12,7 +12,8 @@ import (
 
 func main() {
 	log.Println("Getting config")
-	err := godotenv.Load("./.env")
+	err := godotenv.Load(".env")
+	fmt.Println(os.Getenv("POSTGRES_CONNECTION"))
 	if err != nil {
 		return
 	}

@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/lelouchhh/friendly-basketball-reward/internal/postgres"
 	"log"
 	"os"
@@ -9,7 +11,9 @@ import (
 
 func main() {
 	// Подключение к базе данных
+	err := godotenv.Load(".env")
 	dsn := os.Getenv("POSTGRES_CONNECTION")
+	fmt.Println(dsn)
 	db, err := postgres.NewDB(dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
@@ -23,7 +27,9 @@ func main() {
 	year1 := "2025"
 	month1 := "01"
 	year2 := "2025"
+	year3 := "2025"
 	month2 := "02"
+	month3 := "03"
 
 	// Создаем контекст
 	ctx := context.Background()
@@ -31,6 +37,7 @@ func main() {
 	// Запуск обработки данных за предыдущие два месяца
 	processRewardsForMonth(ctx, db, year1, month1)
 	processRewardsForMonth(ctx, db, year2, month2)
+	processRewardsForMonth(ctx, db, year3, month3)
 
 	log.Println("Processing completed successfully")
 }
@@ -47,6 +54,7 @@ func processRewardsForMonth(ctx context.Context, db *postgres.DB, year, month st
 	processTopGainedRatingMonth(ctx, db, year, month)
 	processTopLostRatingMonth(ctx, db, year, month)
 	processMaxGamesPlayed(ctx, db, year, month)
+	processLongestWinner(ctx, db, year, month)
 
 	log.Printf("Finished processing rewards for %s-%s", year, month)
 }
@@ -125,5 +133,14 @@ func processMaxGamesPlayed(ctx context.Context, db *postgres.DB, year, month str
 		log.Printf("Failed to process max games played for %s-%s: %v", year, month, err)
 	} else {
 		log.Printf("Successfully processed max games played for %s-%s", year, month)
+	}
+}
+func processLongestWinner(ctx context.Context, db *postgres.DB, year, month string) {
+	log.Printf("Processing logest winner for %s-%s...", year, month)
+	err := db.LongestWinStreak(ctx, year, month)
+	if err != nil {
+		log.Printf("Failed to process logest winner for %s-%s: %v", year, month, err)
+	} else {
+		log.Printf("Successfully processed logest winner for %s-%s", year, month)
 	}
 }

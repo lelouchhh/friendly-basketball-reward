@@ -34,6 +34,7 @@ func StartCronJobs(db *postgres.DB, input string) {
 		go processTopGainedRatingMonth(ctx, db, year, month)
 		go processTopLostRatingMonth(ctx, db, year, month)
 		go processMaxGamesPlayed(ctx, db, year, month)
+		go processLongestWinner(ctx, db, year, month)
 	})
 	if err != nil {
 		log.Fatalf("Failed to schedule cron job: %v", err)
@@ -117,5 +118,14 @@ func processMaxGamesPlayed(ctx context.Context, db *postgres.DB, year, month str
 		log.Printf("Failed to process max games played for %s-%s: %v", year, month, err)
 	} else {
 		log.Printf("Successfully processed max games played for %s-%s", year, month)
+	}
+}
+func processLongestWinner(ctx context.Context, db *postgres.DB, year, month string) {
+	log.Printf("Processing logest winner for %s-%s...", year, month)
+	err := db.LongestWinStreak(ctx, year, month)
+	if err != nil {
+		log.Printf("Failed to process logest winner for %s-%s: %v", year, month, err)
+	} else {
+		log.Printf("Successfully processed logest winner for %s-%s", year, month)
 	}
 }

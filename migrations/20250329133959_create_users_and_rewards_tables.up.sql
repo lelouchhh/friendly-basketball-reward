@@ -13,10 +13,19 @@ create table statistic.reward(
                                  value text,
                                  created_at timestamp default now()
 );
-INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу!');
-INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу!');
+INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу 1x1!');
+INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу 2x2!');
+INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу 3x3!');
+INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу 4x4!');
+INSERT INTO statistic.reward_type (type) VALUES ('Лучший игрок месяца по рейтингу 5x5!');
+INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу 1x1!');
+INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу 2x2!');
+INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу 3x3!');
+INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу 4x4!');
+INSERT INTO statistic.reward_type (type) VALUES ('Худший игрок месяца по рейтингу 5x5!');
 INSERT INTO statistic.reward_type (type) VALUES ('Лучший процент побед за месяц!');
 INSERT INTO statistic.reward_type (type) VALUES ('Худший процент побед за месяц!');
 INSERT INTO statistic.reward_type (type) VALUES ('Максимальный прирост рейтинга за месяц!');
 INSERT INTO statistic.reward_type (type) VALUES ('Максимальная потеря рейтинга за месяц!');
 INSERT INTO statistic.reward_type (type) VALUES ('Наибольшее количество сыгранных игр за месяц!');
+INSERT INTO statistic.reward_type (type) VALUES ('Самая длинная серия подряд за месяц!');
